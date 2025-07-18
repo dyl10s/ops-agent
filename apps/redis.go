@@ -19,13 +19,11 @@ import (
 	"strings"
 
 	"github.com/GoogleCloudPlatform/ops-agent/confgenerator"
-	"github.com/GoogleCloudPlatform/ops-agent/confgenerator/fluentbit"
 	"github.com/GoogleCloudPlatform/ops-agent/confgenerator/otel"
 	"github.com/GoogleCloudPlatform/ops-agent/internal/secret"
 )
 
-type MetricsReceiverRedis struct {
-	confgenerator.ConfigComponent          `yaml:",inline"`
+type MetricsReceiverMacroRedis struct {
 	confgenerator.MetricsReceiverSharedTLS `yaml:",inline"`
 	confgenerator.MetricsReceiverShared    `yaml:",inline"`
 
@@ -36,11 +34,11 @@ type MetricsReceiverRedis struct {
 
 const defaultRedisEndpoint = "localhost:6379"
 
-func (r MetricsReceiverRedis) Type() string {
+func (r MetricsReceiverMacroRedis) Type() string {
 	return "redis"
 }
 
-func (r MetricsReceiverRedis) Pipelines(_ context.Context) ([]otel.ReceiverPipeline, error) {
+func (r MetricsReceiverMacroRedis) Pipelines(_ context.Context) ([]otel.ReceiverPipeline, error) {
 	if r.Address == "" {
 		r.Address = defaultRedisEndpoint
 	}
@@ -83,7 +81,7 @@ func (r MetricsReceiverRedis) Pipelines(_ context.Context) ([]otel.ReceiverPipel
 }
 
 func init() {
-	confgenerator.MetricsReceiverTypes.RegisterType(func() confgenerator.MetricsReceiver { return &MetricsReceiverRedis{} })
+	confgenerator.MetricsReceiverTypes.RegisterType(func() confgenerator.MetricsReceiver { return &MetricsReceiverMacroRedis{} })
 }
 
 type LoggingProcessorRedis struct {
@@ -94,23 +92,21 @@ func (LoggingProcessorRedis) Type() string {
 	return "redis"
 }
 
-func (p LoggingProcessorRedis) Components(ctx context.Context, tag string, uid string) []fluentbit.Component {
-	c := confgenerator.LoggingProcessorParseRegex{
-		// Documentation: https://github.com/redis/redis/blob/6.2/src/server.c#L1122
-		// Sample line (Redis 3+): 534:M 28 Apr 2020 11:30:29.988 * DB loaded from disk: 0.002 seconds
-		// Sample line (Redis <3): [4018] 14 Nov 07:01:22.119 * Background saving terminated with success
-		Regex: `^\[?(?<pid>\d+):?(?<roleChar>[A-Z])?\]?\s+(?<time>\d{2}\s+\w+(?:\s+\d{4})?\s+\d{2}:\d{2}:\d{2}.\d{3})\s+(?<level>(\*|#|-|\.))\s+(?<message>.*)$`,
-		ParserShared: confgenerator.ParserShared{
-			TimeKey:    "time",
-			TimeFormat: "%d %b %Y %H:%M:%S.%L",
-			Types: map[string]string{
-				"pid": "integer",
+func (p LoggingProcessorRedis) Expand(ctx context.Context) []confgenerator.InternalLoggingProcessor {
+	return []confgenerator.InternalLoggingProcessor{
+		confgenerator.LoggingProcessorParseRegex{
+			// Documentation: https://github.com/redis/redis/blob/6.2/src/server.c#L1122
+			// Sample line (Redis 3+): 534:M 28 Apr 2020 11:30:29.988 * DB loaded from disk: 0.002 seconds
+			// Sample line (Redis <3): [4018] 14 Nov 07:01:22.119 * Background saving terminated with success
+			Regex: `^\[?(?<pid>\d+):?(?<roleChar>[A-Z])?\]?\s+(?<time>\d{2}\s+\w+(?:\s+\d{4})?\s+\d{2}:\d{2}:\d{2}.\d{3})\s+(?<level>(\*|#|-|\.))\s+(?<message>.*)$`,
+			ParserShared: confgenerator.ParserShared{
+				TimeKey:    "time",
+				TimeFormat: "%d %b %Y %H:%M:%S.%L",
+				Types: map[string]string{
+					"pid": "integer",
+				},
 			},
 		},
-	}.Components(ctx, tag, uid)
-
-	// Log levels documented: https://github.com/redis/redis/blob/6.2/src/server.c#L1124
-	c = append(c,
 		confgenerator.LoggingProcessorModifyFields{
 			Fields: map[string]*confgenerator.ModifyField{
 				"severity": {
@@ -136,20 +132,13 @@ func (p LoggingProcessorRedis) Components(ctx context.Context, tag string, uid s
 				},
 				InstrumentationSourceLabel: instrumentationSourceValue(p.Type()),
 			},
-		}.Components(ctx, tag, uid)...,
-	)
-
-	return c
+		},
+	}
 }
 
-type LoggingReceiverRedis struct {
-	LoggingProcessorRedis `yaml:",inline"`
-	ReceiverMixin         confgenerator.LoggingReceiverFilesMixin `yaml:",inline" validate:"structonly"`
-}
-
-func (r LoggingReceiverRedis) Components(ctx context.Context, tag string) []fluentbit.Component {
-	if len(r.ReceiverMixin.IncludePaths) == 0 {
-		r.ReceiverMixin.IncludePaths = []string{
+func loggingReceiverFilesMixinRedis() confgenerator.LoggingReceiverFilesMixin {
+	return confgenerator.LoggingReceiverFilesMixin{
+		IncludePaths: []string{
 			// Default log path on Ubuntu / Debian
 			"/var/log/redis/redis-server.log",
 			// Default log path built from src (6379 is the default redis port)
@@ -160,14 +149,10 @@ func (r LoggingReceiverRedis) Components(ctx context.Context, tag string) []flue
 			"/var/log/redis/default.log",
 			// Default log path from one click installer (6379 is the default redis port)
 			"/var/log/redis/redis_6379.log",
-		}
+		},
 	}
-	c := r.ReceiverMixin.Components(ctx, tag)
-	c = append(c, r.LoggingProcessorRedis.Components(ctx, tag, "redis")...)
-	return c
 }
 
 func init() {
-	confgenerator.LoggingProcessorTypes.RegisterType(func() confgenerator.LoggingProcessor { return &LoggingProcessorRedis{} })
-	confgenerator.LoggingReceiverTypes.RegisterType(func() confgenerator.LoggingReceiver { return &LoggingReceiverRedis{} })
+	confgenerator.RegisterLoggingFilesProcessorMacro[LoggingProcessorRedis](loggingReceiverFilesMixinRedis)
 }

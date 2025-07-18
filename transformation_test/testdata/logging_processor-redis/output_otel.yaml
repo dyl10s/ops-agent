@@ -1,1 +1,1 @@
-- config_error: "not an OTel processor: &apps.LoggingProcessorRedis{ConfigComponent:confgenerator.ConfigComponent{Type:\"redis\"}}"
+- config_error: "failed generating OTel processor: &confgenerator.loggingProcessorMacroAdapter[github.com/GoogleCloudPlatform/ops-agent/apps.LoggingProcessorRedis]{ConfigComponent:confgenerator.ConfigComponent{Type:\"redis\"}, ProcessorMacro:apps.LoggingProcessorRedis{ConfigComponent:confgenerator.ConfigComponent{Type:\"redis\"}}}, err: unimplemented"

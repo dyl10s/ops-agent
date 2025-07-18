@@ -1,0 +1,10 @@
+[18:7] unknown field "type"
+  15 | metrics:
+  16 |   receivers:
+  17 |     redis:
+> 18 |       type: redis
+             ^
+  19 |       address: localhost:6379
+  20 |       collection_interval: 30s
+  21 |       password: pwd
+  22 |   
