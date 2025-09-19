@@ -1,7 +1,6 @@
 - entries:
   - jsonPayload:
-      "@timestamp": 2025-09-19T02:20:17.920Z
-      ecs.version: "1.2.0"
+      ecs.version: 1.2.0
       elasticsearch.cluster.name: elasticsearch
       elasticsearch.node.name: es-test-3
       event:
@@ -15,11 +14,9 @@
       compute.googleapis.com/resource_name: hostname
       logging.googleapis.com/instrumentation_source: agent.googleapis.com/elasticsearch_json
     logName: projects/my-project/logs/transformation_test
-    severity: 200.0
     timestamp: 2025-09-19T02:20:17.920000000Z
   - jsonPayload:
-      "@timestamp": 2025-09-19T02:20:18.920Z
-      ecs.version: "1.2.0"
+      ecs.version: 1.2.0
       elasticsearch.cluster.name: elasticsearch
       elasticsearch.node.name: es-test-3
       event:
@@ -33,11 +30,9 @@
       compute.googleapis.com/resource_name: hostname
       logging.googleapis.com/instrumentation_source: agent.googleapis.com/elasticsearch_json
     logName: projects/my-project/logs/transformation_test
-    severity: 400.0
     timestamp: 2025-09-19T02:20:18.920000000Z
   - jsonPayload:
-      "@timestamp": 2025-09-19T02:20:19.920Z
-      ecs.version: "1.2.0"
+      ecs.version: 1.2.0
       elasticsearch.cluster.name: elasticsearch
       elasticsearch.node.name: es-test-3
       error.message: failed to obtain node locks
@@ -53,11 +48,9 @@
       compute.googleapis.com/resource_name: hostname
       logging.googleapis.com/instrumentation_source: agent.googleapis.com/elasticsearch_json
     logName: projects/my-project/logs/transformation_test
-    severity: 500.0
     timestamp: 2025-09-19T02:20:19.920000000Z
   - jsonPayload:
-      "@timestamp": 2025-09-19T02:20:20.920Z
-      ecs.version: "1.2.0"
+      ecs.version: 1.2.0
       elasticsearch.cluster.name: elasticsearch
       elasticsearch.node.name: es-test-3
       event:
@@ -70,11 +63,9 @@
       compute.googleapis.com/resource_name: hostname
       logging.googleapis.com/instrumentation_source: agent.googleapis.com/elasticsearch_json
     logName: projects/my-project/logs/transformation_test
-    severity: 100.0
     timestamp: 2025-09-19T02:20:20.920000000Z
   - jsonPayload:
-      "@timestamp": 2025-09-19T02:20:21.920Z
-      ecs.version: "1.2.0"
+      ecs.version: 1.2.0
       elasticsearch.cluster.name: elasticsearch
       elasticsearch.node.name: es-test-3
       event:
@@ -87,11 +78,9 @@
       compute.googleapis.com/resource_name: hostname
       logging.googleapis.com/instrumentation_source: agent.googleapis.com/elasticsearch_json
     logName: projects/my-project/logs/transformation_test
-    severity: 100.0
     timestamp: 2025-09-19T02:20:21.920000000Z
   - jsonPayload:
-      "@timestamp": 2025-09-19T02:20:22.920Z
-      ecs.version: "1.2.0"
+      ecs.version: 1.2.0
       elasticsearch.cluster.name: elasticsearch
       elasticsearch.node.name: es-test-3
       event:
@@ -104,11 +93,9 @@
       compute.googleapis.com/resource_name: hostname
       logging.googleapis.com/instrumentation_source: agent.googleapis.com/elasticsearch_json
     logName: projects/my-project/logs/transformation_test
-    severity: 400.0
     timestamp: 2025-09-19T02:20:22.920000000Z
   - jsonPayload:
-      "@timestamp": 2025-09-19T02:20:23.920Z
-      ecs.version: "1.2.0"
+      ecs.version: 1.2.0
       elasticsearch.cluster.name: elasticsearch
       elasticsearch.node.name: es-test-3
       event:
@@ -121,11 +108,9 @@
       compute.googleapis.com/resource_name: hostname
       logging.googleapis.com/instrumentation_source: agent.googleapis.com/elasticsearch_json
     logName: projects/my-project/logs/transformation_test
-    severity: 600.0
     timestamp: 2025-09-19T02:20:23.920000000Z
   - jsonPayload:
-      "@timestamp": 2025-09-19T02:20:24.920Z
-      ecs.version: "1.2.0"
+      ecs.version: 1.2.0
       elasticsearch.cluster.name: elasticsearch
       elasticsearch.node.name: es-test-3
       event:
@@ -140,8 +125,7 @@
     logName: projects/my-project/logs/transformation_test
     timestamp: 2025-09-19T02:20:24.920000000Z
   - jsonPayload:
-      "@timestamp": 2025-09-19T02:20:25.920Z
-      ecs.version: "1.2.0"
+      ecs.version: 1.2.0
       event:
         dataset: elasticsearch.server
       log.level: INFO
@@ -152,28 +136,7 @@
       compute.googleapis.com/resource_name: hostname
       logging.googleapis.com/instrumentation_source: agent.googleapis.com/elasticsearch_json
     logName: projects/my-project/logs/transformation_test
-    severity: 200.0
     timestamp: 2025-09-19T02:20:25.920000000Z
-  - jsonPayload:
-      "@timestamp": 2025-09-19T02:20:26.920Z
-      ecs.version: "1.2.0"
-      elasticsearch.cluster.name: elasticsearch
-      elasticsearch.node.name: es-test-3
-      event:
-        action: authentication_success
-        dataset: elasticsearch.audit
-      log.level: INFO
-      log.logger: org.elasticsearch.xpack.security.audit.AuditTrail
-      message: audit event
-      service.name: ES_ECS
-      user:
-        name: elastic
-    labels:
-      compute.googleapis.com/resource_name: hostname
-      logging.googleapis.com/instrumentation_source: agent.googleapis.com/elasticsearch_json
-    logName: projects/my-project/logs/transformation_test
-    severity: 200.0
-    timestamp: 2025-09-19T02:20:26.920000000Z
   partialSuccess: true
   resource:
     labels: {}
